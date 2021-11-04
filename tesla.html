@@ -17,24 +17,33 @@
             $('#stage').append('<p> volume: ' + tsData.barData.priceBars[0].volume+ '</p>');
             $('#stage').append('<p> tradeTime: ' + tsData.barData.priceBars[0].tradeTime+ '</p>');
             $('#stage').append('<p> tradeTimeinMills: ' + tsData.barData.priceBars[0].tradeTimeinMills+ '</p>');
+            let openPrices = [];
+            tsData.barData.priceBars.forEach(element => openPrices.push(element.open));
+            console.log(openPrices)
+            let closePrices = [];
+            tsData.barData.priceBars.forEach(element => closePrices.push(element.close));
+            console.log(closePrices)
+            let timestamps = [];
+            tsData.barData.priceBars.forEach(element => timestamps.push(element.tradeTime));
+            console.log(timestamps)
             const ctx = document.getElementById('myChart').getContext('2d');
             const myChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ['1 Diena', '2 Diena', '3 Diena', '4 Diena', '5 Diena'],
+                    labels: timestamps,
                     datasets: [{
                         label: 'Atvēršanās cena',
-                        data: [tsData.barData.priceBars[2].open, tsData.barData.priceBars[3].open, tsData.barData.priceBars[4].open, tsData.barData.priceBars[5].open, tsData.barData.priceBars[6].open, tsData.barData.priceBars[7].open],
+                        data: openPrices,
                         backgroundColor: [
                             'rgba(54, 162, 235, 0.2)',
                         ],
                         borderColor: [
-                            'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)',
                         ],
                         borderWidth: 2
                     },{
                         label: 'Aizvēršanās cena',
-                        data: [tsData.barData.priceBars[2].close, tsData.barData.priceBars[3].close, tsData.barData.priceBars[4].close, tsData.barData.priceBars[5].close, tsData.barData.priceBars[6].close, tsData.barData.priceBars[7].close],
+                        data: closePrices,
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.2)',
                         ],
