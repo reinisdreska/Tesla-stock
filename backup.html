@@ -17,56 +17,53 @@
             $('#stage').append('<p> volume: ' + tsData.barData.priceBars[0].volume+ '</p>');
             $('#stage').append('<p> tradeTime: ' + tsData.barData.priceBars[0].tradeTime+ '</p>');
             $('#stage').append('<p> tradeTimeinMills: ' + tsData.barData.priceBars[0].tradeTimeinMills+ '</p>');});
-        $(function() {
-            $("#driver").click(function(event){
-                var cik = 100
-                let openPrices = [];
-                $.getJSON('https://projects.kartes.lv/tesla/tesla.json', function(tsData) {tsData.barData.priceBars.slice(0, cik).forEach(element => openPrices.push(element.open));})
-                let closePrices = [];
-                $.getJSON('https://projects.kartes.lv/tesla/tesla.json', function(tsData) {tsData.barData.priceBars.slice(0, cik).forEach(element => closePrices.push(element.close));})
-                let timestamps = [];
-                $.getJSON('https://projects.kartes.lv/tesla/tesla.json', function(tsData) {tsData.barData.priceBars.slice(0, cik).forEach(element => timestamps.push(element.tradeTime));})
-                function chart(timestamps, openPrices, closePrices){
-                    const ctx = document.getElementById('myChart').getContext('2d');
-                    const myChart = new Chart(ctx, {
-                        type: 'line',
-                        data: {
-                            labels: timestamps,
-                            datasets: [{
-                                label: 'Atvēršanās cena',
-                                data: openPrices,
-                                backgroundColor: [
-                                    'rgba(54, 162, 235, 0.2)',
-                                ],
-                                borderColor: [
-                                    'rgba(54, 162, 235, 1)',
-                                ],
-                                borderWidth: 2
-                            },{
-                                label: 'Aizvēršanās cena',
-                                data: closePrices,
-                                backgroundColor: [
-                                    'rgba(255, 99, 132, 0.2)',
-                                ],
-                                borderColor: [
-                                    'rgba(255, 99, 132, 1)',
-                                ],
-                                borderWidth: 2
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                        }
-                    });
+        function getVal(){
+            var cik = document.getElementById("int").value;
+            let openPrices = [];
+            $.getJSON('https://projects.kartes.lv/tesla/tesla.json', function(tsData) {tsData.barData.priceBars.slice(0, cik).forEach(element => openPrices.push(element.open));})
+            let closePrices = [];
+            $.getJSON('https://projects.kartes.lv/tesla/tesla.json', function(tsData) {tsData.barData.priceBars.slice(0, cik).forEach(element => closePrices.push(element.close));})
+            let timestamps = [];
+            $.getJSON('https://projects.kartes.lv/tesla/tesla.json', function(tsData) {tsData.barData.priceBars.slice(0, cik).forEach(element => timestamps.push(element.tradeTime));})
+            console.log(openPrices), console.log(closePrices), console.log(timestamps)
+            const ctx = document.getElementById('myChart').getContext('2d');
+            const myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: timestamps,
+                    datasets: [{
+                        label: 'Atvēršanās cena',
+                        data: openPrices,
+                        backgroundColor: [
+                            'rgba(54, 162, 235, 0.2)',
+                        ],
+                        borderColor: [
+                            'rgba(54, 162, 235, 1)',
+                        ],
+                        borderWidth: 2
+                    },{
+                        label: 'Aizvēršanās cena',
+                        data: closePrices,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                responsive: true,
                 }
-                chart(timestamps, openPrices, closePrices);
             });
-        });
+        }
     </script>
     <div class="wrapper">
         <canvas id="myChart" width="400" height="200"></canvas>
     </div>
     <p>Tesla Stock Data</p>
     <div id = "stage">STAGE</div>
-    <input type = "button" id = "driver" value = "Load Data" />
+    <input type="int" id="int" value="Cik dienam" onclick="this.value = '' ">
+    <button onclick="getVal();">Izveido grafiku</button>
 </body>
