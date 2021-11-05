@@ -1,32 +1,57 @@
 <!DOCTYPE html>
-<html lang ="en">
+<html lang="en">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.0/chart.min.js"></script>
-<script src = "./jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
 <head>
     <title>Tesla</title>
     <p>Tesla Stock Data!!!</hp>
 </head>
+
 <body>
-    <script type = "text/javascript" language = "javascript">
+    <script type="text/javascript" language="javascript">
         console.log("Hello")
-        $.getJSON('https://projects.kartes.lv/tesla/tesla.json', function(tsData) {
+        $.getJSON('https://projects.kartes.lv/tesla/tesla.json', function (tsData) {
             $('#stage').html('<p> open: ' + tsData.barData.priceBars[0].open + '</p>');
-            $('#stage').append('<p> high : ' + tsData.barData.priceBars[0].high+ '</p>');
-            $('#stage').append('<p> low: ' + tsData.barData.priceBars[0].low+ '</p>');
-            $('#stage').append('<p> close: ' + tsData.barData.priceBars[0].close+ '</p>');
-            $('#stage').append('<p> volume: ' + tsData.barData.priceBars[0].volume+ '</p>');
-            $('#stage').append('<p> tradeTime: ' + tsData.barData.priceBars[0].tradeTime+ '</p>');
-            $('#stage').append('<p> tradeTimeinMills: ' + tsData.barData.priceBars[0].tradeTimeinMills+ '</p>');});
-        function getVal(){
-            var cik = document.getElementById("int").value;
+            $('#stage').append('<p> high : ' + tsData.barData.priceBars[0].high + '</p>');
+            $('#stage').append('<p> low: ' + tsData.barData.priceBars[0].low + '</p>');
+            $('#stage').append('<p> close: ' + tsData.barData.priceBars[0].close + '</p>');
+            $('#stage').append('<p> volume: ' + tsData.barData.priceBars[0].volume + '</p>');
+            $('#stage').append('<p> tradeTime: ' + tsData.barData.priceBars[0].tradeTime + '</p>');
+            $('#stage').append('<p> tradeTimeinMills: ' + tsData.barData.priceBars[0].tradeTimeinMills + '</p>');
+        });
+        function getVal() {
+
             var openPrices = [];
-            $.getJSON('https://projects.kartes.lv/tesla/tesla.json', function(tsData) {tsData.barData.priceBars.slice(0, cik).forEach(element => openPrices.push(element.open));})
             var closePrices = [];
-            $.getJSON('https://projects.kartes.lv/tesla/tesla.json', function(tsData) {tsData.barData.priceBars.slice(0, cik).forEach(element => closePrices.push(element.close));})
             var timestamps = [];
-            $.getJSON('https://projects.kartes.lv/tesla/tesla.json', function(tsData) {tsData.barData.priceBars.slice(0, cik).forEach(element => timestamps.push(element.tradeTime));})
-            console.log(openPrices), console.log(closePrices), console.log(timestamps)
-            function chart(timestamps, openPrices, closePrices){
+
+            function izveidot_grafiku() {
+                var cik = document.getElementById("int").value;
+                openPrices = openPrices.slice(0, cik);
+                closePrices = closePrices.slice(0, cik);
+                timestamps = timestamps.slice(0, cik);
+
+                chart(timestamps, openPrices, closePrices);
+            }
+
+
+            $.getJSON('https://projects.kartes.lv/tesla/tesla.json', function (tsData) {
+
+                tsData.barData.priceBars.forEach(function (element) {
+                    openPrices.push(element.open)
+                }),
+                    tsData.barData.priceBars.forEach(function (element) {
+                        closePrices.push(element.close)
+                    }),
+                    tsData.barData.priceBars.forEach(function (element) {
+                        timestamps.push(element.tradeTime)
+                    })
+
+                izveidot_grafiku()
+            });
+
+            function chart(timestamps, openPrices, closePrices) {
                 const ctx = document.getElementById('myChart').getContext('2d');
                 const myChart = new Chart(ctx, {
                     type: 'line',
@@ -42,7 +67,7 @@
                                 'rgba(54, 162, 235, 1)',
                             ],
                             borderWidth: 2
-                        },{
+                        }, {
                             label: 'Aizvēršanās cena',
                             data: closePrices,
                             backgroundColor: [
@@ -59,14 +84,14 @@
                     }
                 });
             }
-            chart(timestamps, openPrices, closePrices);
+
         }
     </script>
     <div class="wrapper">
         <canvas id="myChart" width="400" height="200"></canvas>
     </div>
     <p>Tesla Stock Data</p>
-    <div id = "stage">STAGE</div>
+    <div id="stage">STAGE</div>
     <input id="int" value="Cik dienam" onclick="this.value = '' ">
     <button onclick="getVal();">Izveido grafiku</button>
 </body>
